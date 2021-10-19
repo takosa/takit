@@ -5,8 +5,8 @@ This program is toolkit for me.
 
 ## Install
 
-This program is written Rust. If you haven't installed Rust yet.
-Please install it before install this program from [here](https://www.rust-lang.org/tools/install).
+This program is written with Rust. If you haven't installed Rust yet,
+please install it before install this program from [here](https://www.rust-lang.org/tools/install).
 
 ```
 git clone https://github.com/takosa/takit.git
@@ -20,15 +20,14 @@ If you want to know usage, please run the binary file with `--help` option.
 
 ## subcommand
 
-### 1. `vcflank`
+### 1. vcflank
 
-```
-takit-vcflank 0.1.0
 Get flanking sequence for variant site in VCF file from FASTA file.
 
-This program retrieve flanking sequence of variant site which specified in VCF file. You can choose two output format;
-"bracket(...[./.]...)" or "fasta".
+This program retrieve flanking sequence of variant site which specified in 
+VCF file. You can choose two output format; "bracket(...[./.]...)" or "fasta".
 
+```
 USAGE:
     takit vcflank [OPTIONS] <fasta> <vcf>
 
