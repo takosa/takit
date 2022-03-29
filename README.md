@@ -44,3 +44,21 @@ ARGS:
     <vcf>      VCF file for target variant site
 ```
 
+### 2. randfa
+
+Generate rondom fasta and output to stdout.
+
+```
+Generate random fasta
+
+USAGE:
+    takit randfa [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -l <length>        length of each sequence [default: 100000000]
+    -n <n>             number of sequence [default: 5]
+```

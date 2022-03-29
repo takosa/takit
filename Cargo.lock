@@ -1032,6 +1032,7 @@ name = "takit"
 version = "0.1.0"
 dependencies = [
  "bio",
+ "rand 0.7.3",
  "rust-htslib",
  "structopt",
 ]

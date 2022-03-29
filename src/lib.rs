@@ -106,3 +106,38 @@ pub mod vcflank {
     }
 
 }
+
+pub mod randfa {
+    use structopt::StructOpt;
+    use std::io;
+    use bio::io::fasta;
+    use rand::Rng;
+
+    #[derive(StructOpt)]
+    /// Generate random fasta
+    /// 
+    pub struct RandfaOpt {
+        /// number of sequence
+        #[structopt(short = "n", default_value = "5")]
+        n: u64,
+        /// length of each sequence
+        #[structopt(short = "l", default_value = "100000000")]
+        length: u64,
+    }
+    pub fn randfa(args: RandfaOpt) {
+        let nucleotides = [b'A', b'C', b'G', b'T'];
+        let mut rng = rand::thread_rng();
+
+        let mut writer = fasta::Writer::new(io::stdout());
+        
+        for j in 0..args.n {
+            let seq = (0..args.length).map(|_| {
+                let i: usize = rng.gen();
+                nucleotides[i % 4]
+            }).collect::<Vec<u8>>();
+            let id = format!("random{:02}", j);
+            writer.write(&id, None, seq.as_slice()).unwrap();
+        }
+    }
+    
+}
