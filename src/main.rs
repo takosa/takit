@@ -2,11 +2,13 @@ use structopt::StructOpt;
 mod lib;
 pub use crate::lib::vcflank;
 pub use crate::lib::randfa;
+pub use crate::lib::snpdensity;
 
 #[derive(StructOpt)]
 enum Cli {
     Vcflank(vcflank::VcflankOpt),
     Randfa(randfa::RandfaOpt),
+    Snpdensity(snpdensity::SnpdensityOpt),
 }
 
 fn main() {
@@ -17,6 +19,9 @@ fn main() {
         },
         Cli::Randfa(args) => {
             randfa::randfa(args);
+        },
+        Cli::Snpdensity(args) => {
+            snpdensity::snpdensity(args);
         },
     }
 }
