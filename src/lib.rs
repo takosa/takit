@@ -142,6 +142,7 @@ pub mod randfa {
     
 }
 
+<<<<<<< HEAD
 pub mod randsub {
     use structopt::StructOpt;
     use std::io;
@@ -191,3 +192,85 @@ pub mod randsub {
     }
     
 }
+=======
+pub mod snpdensity {
+    use structopt::StructOpt;
+    use std::fs::File;
+    use std::io::{self, BufRead, BufReader};
+    use std::collections::HashMap;
+
+    #[derive(StructOpt)]
+    /// Calculate SNP density by each fixed size bin
+    /// 
+    /// This program calculate SNP density but it is not necessary for your 
+    /// variant to be actually SNP. Only variant positions (chr & bp) are required.
+    pub struct SnpdensityOpt {
+        /// bin size
+        #[structopt(short = "b", long = "bin", default_value = "1000000")]
+        bin: usize,
+        /// position file (1st column: chromosome name, 2nd column: position(bp), no header)
+        posfile: std::path::PathBuf,
+        /// fasta index file or data which contains chr name in 1st column and length(bp) in 2nd
+        /// column (output file of `samtools faidx`)
+        faifile: Option<std::path::PathBuf>,
+    }
+
+    pub fn snpdensity(args: SnpdensityOpt) {
+
+        let file = File::open(args.posfile).unwrap();
+        let reader = BufReader::new(file);
+        let mut densities = HashMap::new();
+        if let Some(faifile) = args.faifile {
+            let file2 = File::open(faifile).unwrap();
+            let reader2 = BufReader::new(file2);
+            for result in reader2.lines() {
+                let line = result.unwrap();
+                let data:Vec<&str> = line.split('\t').collect();
+                if data.len() < 2 {
+                    panic!("Invalid format for fai file.");
+                }
+                let chr = data[0];
+                let len:usize = data[1].parse().unwrap();
+                let mut container = Vec::new();
+                container.resize(len / args.bin + 1, 0);
+                densities.insert(chr.to_string(), container);
+            }
+        }
+
+        for result in reader.lines() {
+            let line = result.unwrap();
+            let data:Vec<&str> = line.split('\t').collect();
+            if data.len() != 2 {
+                panic!("Only 2 columns, TAB delimited text data is accepted.");
+            }
+            let pos:usize = data[1].parse().unwrap();
+            let chr = data[0];
+            let i = (pos - 1) / args.bin;
+            if let Some(v) = densities.get_mut(&chr.to_string()) {
+                if v.len() <= i {
+                    v.resize(i + 1, 0);
+                }
+                v[i] += 1;
+            } else {
+                let mut container = Vec::new();
+                container.resize(i + 1, 0);
+                container[i] += 1;
+                densities.insert(chr.to_string(), container);
+            }
+            
+        }
+
+        let mut keys: Vec<&String> = densities.keys().collect();
+        keys.sort();
+        for key in keys {
+            let mut s = 1;
+            for d in densities[key].iter() {
+                let e = s + args.bin - 1;
+                println!("{}\t{}\t{}\t{}", key, s, e, d);
+                s += args.bin;
+            }
+        }
+
+    }
+}
+>>>>>>> 82976a2e41423a17d316748ddef8a60991863483

@@ -48,9 +48,8 @@ ARGS:
 
 Generate rondom fasta and output to stdout.
 
-```
-Generate random fasta
 
+```
 USAGE:
     takit randfa [OPTIONS]
 
@@ -61,4 +60,36 @@ FLAGS:
 OPTIONS:
     -l <length>        length of each sequence [default: 100000000]
     -n <n>             number of sequence [default: 5]
+```
+
+## 3. snpdensity
+
+Calculate SNP density by each fix-sized bin.
+
+This program calculate SNP density but it is not necessary for your variant to be actually SNP. Only variant positions (chr & bp) are required.
+
+```
+USAGE:
+    takit snpdensity [OPTIONS] <posfile> [faifile]
+
+FLAGS:
+    -h, --help       
+            Prints help information
+
+    -V, --version    
+            Prints version information
+
+
+OPTIONS:
+    -b, --bin <bin>    
+            bin size [default: 1000000]
+
+
+ARGS:
+    <posfile>    
+            position file (1st column: chromosome name, 2nd column: position(bp), no header)
+
+    <faifile>    
+            fasta index file or data which contains chr name in 1st column and length(bp) in 2nd column (output file of
+            `samtools faidx`)
 ```
