@@ -145,7 +145,7 @@ pub mod randfa {
 pub mod snpdensity {
     use structopt::StructOpt;
     use std::fs::File;
-    use std::io::{self, BufRead, BufReader};
+    use std::io::{BufRead, BufReader};
     use std::collections::HashMap;
 
     #[derive(StructOpt)]
@@ -225,7 +225,6 @@ pub mod snpdensity {
 
 pub mod randsub {
     use structopt::StructOpt;
-    use std::io;
     use bio::io::fasta;
     use rand::{Rng, seq::SliceRandom};
 
@@ -256,7 +255,7 @@ pub mod randsub {
         let mut faidx = fasta::IndexedReader::from_file(&args.fasta).unwrap();
         
         let mut rng = rand::thread_rng();
-        for j in 0..args.n {
+        for _ in 0..args.n {
             let seqinfo = sequences.choose(&mut rng).unwrap();
             let name = &seqinfo.name;
             let max_start = seqinfo.len - args.min + 1;
@@ -265,7 +264,7 @@ pub mod randsub {
             let end = rng.gen_range(start+args.min, max_end);
             faidx.fetch(&seqinfo.name, start, end).unwrap();
             let mut seq = Vec::new();
-            faidx.read(&mut seq);
+            faidx.read(&mut seq).unwrap();
             let seq_str = std::str::from_utf8(&seq).unwrap();
             print!(">{}:{}-{}\n{}\n", name, start+1, end, seq_str);
         }

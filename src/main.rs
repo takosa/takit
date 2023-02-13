@@ -1,6 +1,5 @@
 use structopt::StructOpt;
-mod lib;
-pub use crate::lib::{vcflank, randfa, snpdensity, randsub};
+use takit::{vcflank, randfa, snpdensity, randsub};
 
 #[derive(StructOpt)]
 enum Cli {
