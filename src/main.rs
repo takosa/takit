@@ -1,12 +1,12 @@
 use structopt::StructOpt;
 mod lib;
-pub use crate::lib::vcflank;
-pub use crate::lib::randfa;
+pub use crate::lib::{vcflank, randfa, randsub};
 
 #[derive(StructOpt)]
 enum Cli {
     Vcflank(vcflank::VcflankOpt),
     Randfa(randfa::RandfaOpt),
+    Randsub(randsub::RandsubOpt),
 }
 
 fn main() {
@@ -17,6 +17,9 @@ fn main() {
         },
         Cli::Randfa(args) => {
             randfa::randfa(args);
+        },
+        Cli::Randsub(args) => {
+            randsub::randsub(args);
         },
     }
 }

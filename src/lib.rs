@@ -141,3 +141,53 @@ pub mod randfa {
     }
     
 }
+
+pub mod randsub {
+    use structopt::StructOpt;
+    use std::io;
+    use bio::io::fasta;
+    use rand::{Rng, seq::SliceRandom};
+
+    #[derive(StructOpt)]
+    /// Fetch fasta randomly and get sub sequence
+    pub struct RandsubOpt {
+        /// number of sub sequences
+        #[structopt(short = "n", default_value = "5")]
+        n: u64,
+        /// min length of sub sequence
+        #[structopt(long, default_value = "30")]
+        min: u64,
+        /// max length of sub sequence
+        #[structopt(long, default_value = "30")]
+        max: u64,
+        /// reference FASTA file
+        fasta: std::path::PathBuf,
+    }
+    pub fn randsub(args: RandsubOpt) {
+
+        let fai_path = {
+            let mut ext = args.fasta.extension().unwrap().to_os_string();
+            ext.push(".fai");
+            args.fasta.with_extension(ext)
+        };
+        let sequences = fasta::Index::from_file(&fai_path).unwrap().sequences();
+
+        let mut faidx = fasta::IndexedReader::from_file(&args.fasta).unwrap();
+        
+        let mut rng = rand::thread_rng();
+        for j in 0..args.n {
+            let seqinfo = sequences.choose(&mut rng).unwrap();
+            let name = &seqinfo.name;
+            let max_start = seqinfo.len - args.min + 1;
+            let start = rng.gen_range(0, max_start);
+            let max_end = std::cmp::min(seqinfo.len, start + args.max + 1);
+            let end = rng.gen_range(start+args.min, max_end);
+            faidx.fetch(&seqinfo.name, start, end).unwrap();
+            let mut seq = Vec::new();
+            faidx.read(&mut seq);
+            let seq_str = std::str::from_utf8(&seq).unwrap();
+            print!(">{}:{}-{}\n{}\n", name, start+1, end, seq_str);
+        }
+    }
+    
+}
