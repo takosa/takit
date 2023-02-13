@@ -93,3 +93,27 @@ ARGS:
             fasta index file or data which contains chr name in 1st column and length(bp) in 2nd column (output file of
             `samtools faidx`)
 ```
+
+## 4. randsub
+
+Fetch fasta randomly and get sub sequence.
+
+This program randomly cut out sequence in fasta file and output the sub-sequence.
+
+```
+USAGE:
+    takit randsub [OPTIONS] <fasta>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --max <max>    max length of sub sequence [default: 30]
+        --min <min>    min length of sub sequence [default: 30]
+    -n <n>             number of sub sequences [default: 5]
+
+ARGS:
+    <fasta>    reference FASTA file
+```
+
