@@ -1,7 +1,7 @@
 takit: TAKayuki's toolKIT
 =========================
 
-This program is toolkit for me.
+This program is toolkit for me but if you think it is usefull, you can use it freely.
 
 ## Install
 
