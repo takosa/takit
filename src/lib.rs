@@ -271,3 +271,38 @@ pub mod randsub {
     }
     
 }
+
+pub mod abc {
+    use structopt::StructOpt;
+    use bio::io::fasta;
+    use bio::alphabets::Alphabet;
+
+    #[derive(StructOpt)]
+    /// check what kind of alphabet is used in fasta
+    pub struct AbcOpt {
+        /// case insensitive (make all base to uppercase)
+        #[structopt(short = "i")]
+        case_insensitive: bool,
+        /// target FASTA file
+        fasta: std::path::PathBuf,
+    }
+    pub fn abc(args: AbcOpt) {
+
+        let reader = fasta::Reader::from_file(&args.fasta).unwrap();
+        
+        let mut sequence = Vec::new();
+        for record in reader.records() {
+            let record = record.unwrap();
+            if args.case_insensitive {
+                 sequence.extend_from_slice(&record.seq().to_ascii_uppercase());
+            } else {
+                 sequence.extend_from_slice(record.seq());
+            }
+        }
+
+        let alphabet = Alphabet::new(&sequence);
+        let symbols: Vec<u8> = alphabet.symbols.iter().map(|a| a as u8).collect();
+
+        println!("{}", std::str::from_utf8(&symbols).unwrap());
+    }
+}

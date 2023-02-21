@@ -1,5 +1,5 @@
 use structopt::StructOpt;
-use takit::{vcflank, randfa, snpdensity, randsub};
+use takit::*;
 
 #[derive(StructOpt)]
 enum Cli {
@@ -7,6 +7,7 @@ enum Cli {
     Randfa(randfa::RandfaOpt),
     Snpdensity(snpdensity::SnpdensityOpt),
     Randsub(randsub::RandsubOpt),
+    Abc(abc::AbcOpt),
 }
 
 fn main() {
@@ -23,6 +24,9 @@ fn main() {
         },
         Cli::Randsub(args) => {
             randsub::randsub(args);
+        },
+        Cli::Abc(args) => {
+            abc::abc(args);
         },
     }
 }
