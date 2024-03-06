@@ -117,3 +117,19 @@ ARGS:
     <fasta>    reference FASTA file
 ```
 
+## 4. abc
+
+Check what kind of alphabet is used in fasta
+
+```
+USAGE:
+    takit abc [FLAGS] <fasta>
+
+FLAGS:
+    -i               case insensitive (make all base to uppercase)
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <fasta>    target FASTA file
+```
