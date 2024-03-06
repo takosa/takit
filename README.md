@@ -117,7 +117,7 @@ ARGS:
     <fasta>    reference FASTA file
 ```
 
-## 4. abc
+## 5. abc
 
 Check what kind of alphabet is used in fasta
 
@@ -133,3 +133,21 @@ FLAGS:
 ARGS:
     <fasta>    target FASTA file
 ```
+
+## 6. cmpfa
+
+Compare two fasta sequence. if there are same sequences, print id pair for them.
+
+```
+USAGE:
+    takit cmpfa <fasta1> <fasta2>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <fasta1>    target FASTA file 1
+    <fasta2>    target FASTA file 2
+```
+

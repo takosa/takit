@@ -8,6 +8,7 @@ enum Cli {
     Snpdensity(snpdensity::SnpdensityOpt),
     Randsub(randsub::RandsubOpt),
     Abc(abc::AbcOpt),
+    Cmpfa(cmpfa::CmpfaOpt),
 }
 
 fn main() {
@@ -27,6 +28,9 @@ fn main() {
         },
         Cli::Abc(args) => {
             abc::abc(args);
+        },
+        Cli::Cmpfa(args) => {
+            cmpfa::cmpfa(args);
         },
     }
 }

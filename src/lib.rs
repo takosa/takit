@@ -259,9 +259,9 @@ pub mod randsub {
             let seqinfo = sequences.choose(&mut rng).unwrap();
             let name = &seqinfo.name;
             let max_start = seqinfo.len - args.min + 1;
-            let start = rng.gen_range(0, max_start);
+            let start = rng.gen_range(0..=max_start);
             let max_end = std::cmp::min(seqinfo.len, start + args.max + 1);
-            let end = rng.gen_range(start+args.min, max_end);
+            let end = rng.gen_range(start+args.min..=max_end);
             faidx.fetch(&seqinfo.name, start, end).unwrap();
             let mut seq = Vec::new();
             faidx.read(&mut seq).unwrap();
@@ -304,5 +304,65 @@ pub mod abc {
         let symbols: Vec<u8> = alphabet.symbols.iter().map(|a| a as u8).collect();
 
         println!("{}", std::str::from_utf8(&symbols).unwrap());
+    }
+}
+
+pub mod cmpfa {
+    use structopt::StructOpt;
+    use bio::io::fasta::{self, FastaRead};
+    use flate2::bufread::MultiGzDecoder;
+    use std::fs::File;
+    use std::path::Path;
+    use std::ffi::OsStr;
+    use std::io::BufReader;
+
+    #[derive(StructOpt)]
+    /// compare two fasta sequence
+    pub struct CmpfaOpt {
+        /// target FASTA file 1
+        fasta1: std::path::PathBuf,
+        /// target FASTA file 2
+        fasta2: std::path::PathBuf,
+    }
+
+    fn read_seq_from_fasta<P: AsRef<Path>>(path: P) -> Vec<(String, Vec<u8>)>{
+        let file = File::open(&path).unwrap();
+        let ext = &path.as_ref().extension().and_then(OsStr::to_str);
+        let mut reader: Box<dyn FastaRead> = match ext {
+            Some("gz") => Box::new(fasta::Reader::new(MultiGzDecoder::new(BufReader::new(file)))),
+            _ => Box::new(fasta::Reader::new(file)),
+        };
+        let mut sequences = Vec::new();
+        let mut record = fasta::Record::new();
+        loop {
+            reader.read(&mut record).unwrap();
+            let id = record.id().to_string();
+            let seq = record.seq().to_ascii_uppercase().to_vec();
+            sequences.push( (id, seq) );
+            if record.is_empty() {
+                break;
+            }
+        }
+        sequences
+    }
+    pub fn cmpfa(args: CmpfaOpt) {
+
+
+        let sequence1 = read_seq_from_fasta(&args.fasta1);
+        let sequence2 = read_seq_from_fasta(&args.fasta2);
+
+        for (id1, seq1) in &sequence1 {
+            let mut matched = false;
+            for (id2, seq2) in &sequence2 {
+                if seq1 == seq2 {
+                    println!("{id1}\t{id2}");
+                    matched = true;
+                }
+            }
+            if ! matched {
+                println!("{id1}\t");
+            }
+        }
+
     }
 }
